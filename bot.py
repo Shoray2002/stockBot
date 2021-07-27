@@ -8,7 +8,7 @@ nse=Nse()
 from jugaad_data.nse import stock_csv, stock_df
 
 TOKEN ='1944457344:AAFVfCOhzvs2_qEwu_cxsnYu28gQ8VL57zQ'
-PORT = int(os.environ.get('PORT', '8443'))
+PORT = int(os.environ.get('PORT', '5000'))
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
@@ -54,8 +54,8 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", start))
     dispatcher.add_handler(CommandHandler("check", check))
     dispatcher.add_handler(CommandHandler("get", get_quote))
-    updater.start_webhook(listen="0.0.0.0",port=PORT,url_path=TOKEN)
-    updater.bot.set_webhook(APP_NAME + TOKEN)
+    updater.start_webhook(listen="192.168.0.1",port=PORT,url_path=TOKEN)
+    updater.bot.set_webhook('https://quotebot-121.herokuapp.com/' + TOKEN)
     updater.idle()
 
 if __name__ == '__main__':
