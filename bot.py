@@ -53,7 +53,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("check", check))
     dispatcher.add_handler(CommandHandler("get", get_quote))
     updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
-    updater.bot.setWebhook('https://stockbot-121.herokuapp.com/' + TOKEN)
+    updater.bot.setWebhook('https://stockbot-28.herokuapp.com/' + TOKEN)
     updater.idle()
 
 if __name__ == '__main__':
