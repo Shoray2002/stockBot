@@ -1,6 +1,5 @@
 import logging
-import os
-PORT = int(os.environ.get('PORT', 5000))
+# import os
 from telegram import Update
 from telegram.ext import Updater, CommandHandler,  CallbackContext
 from datetime import  date,timedelta
@@ -23,9 +22,9 @@ def start(update: Update, context: CallbackContext) -> None:
 
 
 def check(update: Update, context: CallbackContext) -> bool:
-  t = str(context.args[0])
+  t = str(context.args[0]).upper()
   s=nse.is_valid_code(t)
-  update.message.reply_text(f'{t.upper()} is valid' if s else f'{t.lower()} is invalid')
+  update.message.reply_text(f'{t} is valid' if s else f'{t} is invalid')
 
 
 
@@ -34,14 +33,17 @@ def get_quote(update: Update, context: CallbackContext) -> None:
     # chat_id = update.message.chat_id
     try:
         t = str(context.args[0])
-        print(t)
-        df = stock_df(symbol=t, from_date=date.today()-timedelta(days=1),to_date=date.today(), series="EQ")
-        df=df.drop(['VWAP'  , '52W H' , '52W L'  ,  'VOLUME'  ,'VALUE' , 'NO OF TRADES' ],axis=1)
-        update.message.reply_text(df.head(1).to_string())
+        # print(t)
+        
+        if nse.is_valid_code(t)==True:
+            df = stock_df(symbol=t, from_date=date.today()-timedelta(days=1),to_date=date.today(), series="EQ")
+            update.message.reply_text(f'Date: {df.DATE.to_string(index=False)}\nOpen: {df.OPEN.to_string(index=False)}\nClose: {df.CLOSE.to_string(index=False)}\nHIGH: {df.HIGH.to_string(index=False)}\nLOW: {df.LOW.to_string(index=False)} ')
+        else :
+            update.message.reply_text(f"INVALID stock code: {t.upper()}")
+
 
     except (IndexError, ValueError):
         update.message.reply_text('IMPROVE THE CODE')
-
 
 
 def main() -> None:
@@ -52,8 +54,7 @@ def main() -> None:
     dispatcher.add_handler(CommandHandler("help", start))
     dispatcher.add_handler(CommandHandler("check", check))
     dispatcher.add_handler(CommandHandler("get", get_quote))
-    updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
-    updater.bot.setWebhook('https://warm-savannah-56773.herokuapp.com/' + TOKEN)
+    updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
