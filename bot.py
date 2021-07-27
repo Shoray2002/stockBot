@@ -8,6 +8,7 @@ from nsetools import Nse
 nse=Nse()
 from jugaad_data.nse import stock_csv, stock_df
 
+TOKEN ='1944457344:AAFVfCOhzvs2_qEwu_cxsnYu28gQ8VL57zQ'
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
@@ -45,7 +46,6 @@ def get_quote(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Run bot."""
-    TOKEN=os.getenv('TOKEN')
     updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
