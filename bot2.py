@@ -1,5 +1,6 @@
 import logging
 import os
+PORT = int(os.environ.get('PORT', 5000))
 from telegram import Update
 from telegram.ext import Updater, CommandHandler,  CallbackContext
 from datetime import  date,timedelta
@@ -44,13 +45,15 @@ def get_quote(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Run bot."""
-    updater = Updater(os.getenv('TOKEN'))
+    TOKEN=os.getenv('TOKEN')
+    updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", start))
     dispatcher.add_handler(CommandHandler("check", check))
     dispatcher.add_handler(CommandHandler("get", get_quote))
-    updater.start_polling()
+    updater.start_webhook(listen="0.0.0.0",port=int(PORT),url_path=TOKEN)
+    updater.bot.setWebhook('https://stockbot-121.herokuapp.com/' + TOKEN)
     updater.idle()
 
 if __name__ == '__main__':
