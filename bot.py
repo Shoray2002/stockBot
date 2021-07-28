@@ -48,14 +48,14 @@ def get_quote(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     """Run bot."""
+    print("started")
     updater = Updater(TOKEN)
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler("start", start))
     dispatcher.add_handler(CommandHandler("help", start))
     dispatcher.add_handler(CommandHandler("check", check))
     dispatcher.add_handler(CommandHandler("get", get_quote))
-    updater.start_webhook(listen="192.168.0.1",port=PORT,url_path=TOKEN)
-    updater.bot.set_webhook('https://quotebot-121.herokuapp.com/' + TOKEN)
+    updater.start_polling()
     updater.idle()
 
 if __name__ == '__main__':
